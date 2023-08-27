@@ -3,17 +3,65 @@
 
 
 TVout TV;
-int currentSize;
-int maxSize;
-int radius;
+int circleSize;
+int maxCircleSize;
+int circleRadius;
+bool circleGrowing;
 
 
 void setup()
 {
+	Serial.begin(115200);
+
 	TV.begin(NTSC);
-	currentSize = 0;
-	maxSize = TV.vres();
-	radius = 1;
+	
+	circleSize = 0;
+	maxCircleSize = TV.vres();
+	circleRadius = 0;
+	circleGrowing = false;
+}
+
+
+void drawLine()
+{
+	TV.draw_line(
+		random(TV.hres()), 
+		random(TV.vres()), 
+		random(TV.hres()), 
+		random(TV.vres()), 
+		WHITE);
+}
+
+
+void drawCircle()
+{
+	TV.draw_circle(TV.hres() / 2, TV.vres() / 2, circleRadius, WHITE);
+
+	circleGrowing ? ++circleRadius : --circleRadius;
+
+	if (circleRadius > maxCircleSize)
+		circleGrowing = !circleGrowing;
+	else if (circleRadius < 0)
+		circleGrowing = !circleGrowing;
+}
+
+
+void drawResizingCircles()
+{
+	TV.draw_circle(TV.hres() / 2, TV.vres() / 2, circleRadius, WHITE);
+
+	for (int i = 0; i < TV.vres(); i += 5)
+	{
+		if (circleRadius - i > 0)
+			TV.draw_circle(TV.hres() / 2, TV.vres() / 2, circleRadius - i, WHITE);
+	}
+
+	circleGrowing ? ++circleRadius : --circleRadius;
+
+	if (circleRadius > maxCircleSize / 2)
+		circleGrowing = !circleGrowing;
+	else if (circleRadius < 0)
+		circleGrowing = !circleGrowing;
 }
 
 
@@ -21,17 +69,10 @@ void loop()
 {
 	TV.clear_screen();
 
-	TV.draw_circle(TV.hres() / 2, TV.vres() / 2, radius, WHITE);
-	++radius;
-	if (radius > maxSize)
-		radius = 1;
+	drawLine();
+	drawCircle();
 
-	int x1 = random(TV.hres());
-	int y1 = random(TV.vres());
-	int x2 = random(TV.hres());
-	int y2 = random(TV.vres());
-
-	TV.draw_line(x1, y1, x2, y2, WHITE);
+	Serial.println(circleRadius);
 
 	TV.delay(10);
 }

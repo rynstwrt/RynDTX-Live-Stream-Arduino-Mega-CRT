@@ -55,25 +55,6 @@ void drawCircle()
 }
 
 
-// void drawResizingCircles()
-// {
-// 	TV.draw_circle(TV.hres() / 2, TV.vres() / 2, circleRadius, WHITE);
-
-// 	for (int i = 0; i < TV.vres(); i += 5)
-// 	{
-// 		if (circleRadius - i > 0)
-// 			TV.draw_circle(TV.hres() / 2, TV.vres() / 2, circleRadius - i, WHITE);
-// 	}
-
-// 	circleGrowing ? ++circleRadius : --circleRadius;
-
-// 	if (circleRadius > maxCircleSize / 2)
-// 		circleGrowing = !circleGrowing;
-// 	else if (circleRadius < 0)
-// 		circleGrowing = !circleGrowing;
-// }
-
-
 void drawPixel()
 {
 	int x = random(TV.hres());
